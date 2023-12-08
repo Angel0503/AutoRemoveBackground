@@ -1,17 +1,21 @@
 import requests
 import os
+from dotenv import load_dotenv
 
-path = os.getcwd()+"\\AutoRemoveBackground\\"
+load_dotenv()
+
+path = os.getcwd()
+apiKey = os.getenv("API_KEY")
 
 def remove_bg_classic(image):
     response = requests.post(
             'https://api.remove.bg/v1.0/removebg',
-            files={'image_file': open(f'{path}BaseImage/{image}', 'rb')},
+            files={'image_file': open(f'{path}/BaseImage/{image}', 'rb')},
             data={'size': 'auto'},
-            headers={'X-Api-Key': 'RccN4cB4cctAQWFe5janPUgL'},
+            headers={'X-Api-Key': f'{apiKey}'},
         )
     if response.status_code == requests.codes.ok:
-        with open(f'{path}RemoveBgImage/{image}', 'wb') as out:
+        with open(f'{path}/RemoveBgImage/{image}', 'wb') as out:
             out.write(response.content)
     else:
         print("Error:", response.status_code, response.text)
@@ -21,17 +25,16 @@ def remove_bg_with_color(image, color):
             'https://api.remove.bg/v1.0/removebg',
             files={'image_file': open(f'{path}BaseImage/{image}', 'rb')},
             data={f'size': 'auto', 'bg_color': {color}},
-            headers={'X-Api-Key': 'RccN4cB4cctAQWFe5janPUgL'},
+            headers={'X-Api-Key': f'{apiKey}'},
         )
     if response.status_code == requests.codes.ok:
-        with open(f'{path}RemoveBgImage/{image}', 'wb') as out:
+        with open(f'{path}/RemoveBgImage/{image}', 'wb') as out:
             out.write(response.content)
     else:
         print("Error:", response.status_code, response.text)
 
 def get_all_images():
-    
-    listImg = os.listdir(path+"BaseImage")
+    listImg = os.listdir(path+"\BaseImage")
     listNomImg = []
     for img in listImg:
         listNomImg.append(img.replace('.PNG', ''))
@@ -46,9 +49,9 @@ def remove_bg(type, images, color=None):
             for image in images:
                 remove_bg_with_color(image, color)
         else:
-            print("Mauvais type de remove")
+            print("Error in type")
     else:
-        print("Le dossier d'images est vide")
+        print("No images in BaseImage folder")
 
 
 remove_bg("classic", get_all_images())
