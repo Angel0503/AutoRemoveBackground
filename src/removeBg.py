@@ -1,5 +1,6 @@
 import importlib
 
+# Check if the library is installed, if not, install it
 def check_install_library(library_name):
     try:
         importlib.import_module(library_name)
@@ -25,6 +26,7 @@ load_dotenv()
 path = os.getcwd()
 apiKey = os.getenv("API_KEY")
 
+# Remove background from image
 def remove_bg_classic(image):
     response = requests.post(
             'https://api.remove.bg/v1.0/removebg',
@@ -38,6 +40,7 @@ def remove_bg_classic(image):
     else:
         print("Error:", response.status_code, response.text)
 
+# Remove background from image with color
 def remove_bg_with_color(image, color):
     response = requests.post(
             'https://api.remove.bg/v1.0/removebg',
@@ -51,6 +54,7 @@ def remove_bg_with_color(image, color):
     else:
         print("Error:", response.status_code, response.text)
 
+# Get all images in Images folder
 def get_all_images():
     listImg = os.listdir(path+"\Images")
     listNomImg = []
@@ -58,6 +62,7 @@ def get_all_images():
         listNomImg.append(img.replace('.PNG', ''))
     return listNomImg
 
+# Remove background from all images in Images folder
 def remove_bg(type, images, color=None):
     if len(images) != 0:
         if type == "classic":
